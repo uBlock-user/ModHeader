@@ -6,6 +6,6 @@ Last ad-free version(v2.2.3) for Chromium/Chrome, due to the author succumbing t
 
 # Features/details
 
-https://mod-header.appspot.com/
+Not ran/owned by me -> https://mod-header.appspot.com/
 
 
