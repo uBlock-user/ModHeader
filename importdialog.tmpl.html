@@ -1,0 +1,17 @@
+<md-dialog flex="70">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Import profile</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <md-input-container flex md-no-float>
+      <textarea rows="5" ng-model="importProfile" placeholder="Paste exported profile here"></textarea>
+    </md-input-container>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="closeDialog()" class="md-primary">
+      Done
+    </md-button>
+  </div>
+</md-dialog>

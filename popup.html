@@ -1,0 +1,341 @@
+<!doctype html>
+<head>
+  <link href="styles/angular-material.min.css" rel="stylesheet" type="text/css">
+  <link href="styles/style.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="initial-scale=1" />
+  <script src="scripts/angular.min.js"></script>
+  <script src="scripts/angular-animate.min.js"></script>
+  <script src="scripts/angular-aria.min.js"></script>
+  <script src="scripts/angular-material.min.js"></script>
+  <script src="scripts/main.js"></script>
+</head>
+<body ng-csp ng-app="modheader-popup" ng-controller="AppController">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="Settings" md-no-ink
+        ng-click="toggleSidenav()">
+        <md-icon md-svg-src="images/ic_menu_18px.svg"></md-icon>
+      </md-button>
+      <h2>
+        <span>
+          <md-input-container md-no-float>
+            <input ng-model="dataSource.selectedProfile.title" type="text"
+              placeholder="Profile name"
+              class="profile-title">
+          </md-input-container>
+        </span>
+      </h2>
+      <span flex></span>
+
+      <md-button aria-label="Tab" md-no-ink
+      ng-show="!dataSource.lockedTabId" ng-click="dataSource.lockToTab()">
+        <md-icon md-svg-src="images/ic_lock_18px.svg"></md-icon>
+        Tab lock
+      </md-button>
+
+      <md-button aria-label="Tab" md-no-ink
+      ng-show="dataSource.lockedTabId" ng-click="dataSource.unlockAllTab()">
+        <md-icon md-svg-src="images/ic_lock_open_18px.svg"></md-icon>
+        Unlock
+      </md-button>
+
+      <md-button class="md-icon-button" aria-label="Pause" md-no-ink
+      ng-show="!dataSource.isPaused" ng-click="dataSource.pause()">
+        <md-icon md-svg-src="images/ic_pause_18px.svg"></md-icon>
+      </md-button>
+
+      <md-button class="md-icon-button" aria-label="Play" md-no-ink
+      ng-show="dataSource.isPaused" ng-click="dataSource.play()">
+        <md-icon md-svg-src="images/ic_play_arrow_18px.svg"></md-icon>
+      </md-button>
+
+      <md-menu>
+        <md-button class="md-icon-button" aria-label="Add" md-no-ink ng-click="$mdOpenMenu()">
+          <md-icon md-svg-src="images/ic_add_18px.svg"></md-icon>
+        </md-button>
+        <md-menu-content width="4" >
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="dataSource.addHeader(dataSource.selectedProfile.headers)">
+              Request header
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="dataSource.addHeader(dataSource.selectedProfile.respHeaders)">
+              Response header
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="dataSource.addFilter(dataSource.selectedProfile.filters)">
+              Filter
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      
+      <md-menu>
+        <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu()">
+          <md-icon md-svg-src="images/ic_more_vert_18px.svg"></md-icon>
+        </md-button>
+        <md-menu-content width="4" >
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="profileService.deleteProfile(dataSource.selectedProfile)">
+              <md-icon md-svg-src="images/ic_delete_black_24px.svg"
+                md-menu-align-target></md-icon>
+              Delete profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="profileService.cloneProfile(dataSource.selectedProfile)">
+              <md-icon md-svg-src="images/ic_content_copy_black_24px.svg"></md-icon>
+              Clone profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="profileService.exportProfile($event, dataSource.selectedProfile)">
+              <md-icon md-svg-src="images/ic_file_download_24px.svg"></md-icon>
+              Export profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button md-no-ink
+                ng-click="profileService.importProfile($event, dataSource.selectedProfile)">
+              <md-icon md-svg-src="images/ic_file_upload_24px.svg"></md-icon>
+              Import profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-divider></md-menu-divider><md-menu-item>
+            <md-button md-no-ink
+                ng-click="profileService.openSettings($event, dataSource.selectedProfile)">
+              <md-icon md-svg-src="images/ic_settings_24px.svg"></md-icon>
+              Profile settings
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </div>
+  </md-toolbar>
+  <md-sidenav md-no-ink class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+    <md-toolbar class="md-theme-indigo">
+      <div class="md-toolbar-tools">
+        <md-button md-no-ink class="md-icon-button" aria-label="Settings"
+          ng-click="toggleSidenav()">
+          <md-icon md-svg-src="images/ic_arrow_back_18px.svg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-list>
+      <md-list-item ng-repeat="profile in dataSource.profiles"
+        ng-click="profileService.selectProfile(profile)">
+        <md-checkbox aria-label="{{profile.title}}" md-no-ink
+          ng-checked="profile == dataSource.selectedProfile">
+        </md-checkbox>
+        <p>{{profile.title}}</p>
+      </md-list-item>
+      <md-list-item ng-click="profileService.addProfile()">
+        <md-icon md-svg-src="images/ic_add_18px.svg"></md-icon>
+        <p>Add Profile</p>
+      </md-list-item>
+      <md-list-item ng-click="profileService.openCloudBackup($event)">
+        <md-icon md-svg-src="images/ic_cloud_download_18px.svg"></md-icon>
+        <p>Cloud backup</p>
+      </md-list-item>
+      <md-divider></md-divider>
+      <md-list-item ng-click="openLink('https://www.paypal.com/pools/c/84aPpFIA0Z')">
+        <md-icon md-svg-src="images/ic_attach_money_18px.svg"></md-icon>
+        <p>Donate</p>
+      </md-list-item>
+      <md-list-item ng-click="openLink('https://mod-header.appspot.com/help.html')">
+        <md-icon md-svg-src="images/ic_help_24px.svg"></md-icon>
+        <p>Help</p>
+      </md-list-item>
+    </md-list>
+  </md-sidenav>
+  <md-content class="main-content" ng-class="{disabled: dataSource.isPaused}">
+    <div class="md-subheader" ng-controller="SortingController as sortCtrl">
+      <div class="md-subheader-inner">
+        <span class="md-subheader-content">
+          <a class="name-input"
+            ng-click="sortCtrl.order(dataSource.selectedProfile, 'name')">
+            Name
+            <span class="sortorder"
+              ng-if="dataSource.predicate === 'name'"
+              ng-class="{reverse: dataSource.reverse}">
+            </span>
+          </a>
+          <a class="value-input"
+            ng-click="sortCtrl.order(dataSource.selectedProfile, 'value')">
+            Value
+            <span class="sortorder"
+              ng-if="dataSource.predicate === 'value'"
+              ng-class="{reverse: dataSource.reverse}">
+            </span>
+          </a>
+          <a class="comment-input" ng-if="!dataSource.selectedProfile.hideComment"
+            ng-click="sortCtrl.order(dataSource.selectedProfile, 'comment')">
+            Comment
+            <span class="sortorder"
+              ng-if="dataSource.predicate === 'comment'"
+              ng-class="{reverse: dataSource.reverse}">  
+            </span>
+          </a>
+        </span>
+      </div>
+    </div>
+    <section>
+      <div class="section-title">Request Headers</div>
+      <div ng-repeat="header in dataSource.selectedProfile.headers"
+        class="header-row" layout="row">
+        <md-checkbox ng-model="header.enabled" md-no-ink
+          class="enable-checkbox"
+          aria-label="Enabled"></md-checkbox>
+        <md-autocomplete
+          md-search-text="header.name"
+          input-name="headerName"
+          md-items="item in autocompleteService.query(
+          autocompleteService.requestHeaderNames,
+          dataSource.selectedProfile.headers,
+          'name',
+          header.name)"
+          md-item-text="item"
+          md-autoselect="true"
+          md-floating-label="Name">
+          <md-item-template>
+            <span md-highlight-text="header.name">{{item}}</span>
+          </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete
+          md-search-text="header.value"
+          input-name="headerValue"
+          md-items="item in autocompleteService.query(
+          autocompleteService.requestHeaderValues,
+          dataSource.selectedProfile.headers,
+          'value',
+          header.value)"
+          md-item-text="item"
+          md-autoselect="true"
+          md-floating-label="Value"
+          flex>
+          <md-item-template>
+            <span md-highlight-text="header.value">{{item}}</span>
+          </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete
+          md-search-text="header.comment"
+          input-name="headerComment"
+          md-items="[]"
+          ng-if="!dataSource.selectedProfile.hideComment"
+          md-floating-label="Comment"
+          class="comment-autocomplete">
+        </md-autocomplete>
+        <md-button class="md-icon-button" md-no-ink
+          ng-click="dataSource.removeHeaderEnsureNonEmpty(dataSource.selectedProfile.headers, header)">
+          <md-icon md-svg-icon="md-close"
+            class="remove-button-icon"></md-icon>
+        </md-button>
+      </div>
+    </section>
+    <div ng-if="dataSource.selectedProfile.respHeaders.length">
+      <div class="section-title">Response Headers</div>
+      <div ng-repeat="header in dataSource.selectedProfile.respHeaders"
+        class="header-row" layout="row">
+        <md-checkbox ng-model="header.enabled" md-no-ink
+          class="enable-checkbox"
+          aria-label="Enabled"></md-checkbox>
+        <md-autocomplete
+          md-search-text="header.name"
+          input-name="headerName"
+          md-items="item in autocompleteService.query(
+          autocompleteService.responseHeaderNames,
+          dataSource.selectedProfile.respHeaders,
+          'name',
+          header.name)"
+          md-item-text="item"
+          md-autoselect="true"
+          md-floating-label="Name">
+          <md-item-template>
+            <span md-highlight-text="header.name">{{item}}</span>
+          </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete
+          md-search-text="header.value"
+          input-name="headerValue"
+          md-items="item in autocompleteService.query(
+          autocompleteService.responseHeaderValues,
+          dataSource.selectedProfile.respHeaders,
+          'value',
+          header.value)"
+          md-item-text="item"
+          md-autoselect="true"
+          md-floating-label="Value"
+          flex>
+          <md-item-template>
+            <span md-highlight-text="header.value">{{item}}</span>
+          </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete
+          md-search-text="header.comment"
+          input-name="headerComment"
+          md-items="[]"
+          ng-if="!dataSource.selectedProfile.hideComment"
+          md-floating-label="Comment"
+          class="comment-autocomplete">
+        </md-autocomplete>
+        <md-button class="md-icon-button" md-no-ink
+          ng-click="dataSource.removeHeader(dataSource.selectedProfile.respHeaders, header)">
+          <md-icon md-svg-icon="md-close"
+            class="remove-button-icon"></md-icon>
+        </md-button>
+      </div>
+    </div>
+    <div ng-if='dataSource.selectedProfile.filters.length'>
+      <div class="section-title">Filters</div>
+      <div ng-repeat="filter in dataSource.selectedProfile.filters"
+        class="header-row" layout="row">
+        <md-checkbox ng-model="filter.enabled" md-no-ink
+          class="enable-checkbox"
+          aria-label="Enabled"></md-checkbox>
+        <md-select ng-model="filter.type" placeholder="Type"
+          class="filter-type">
+          <md-option value="urls">URL Pattern</md-option>
+          <md-option value="types">Resource Type</md-option>
+        </md-select>
+        <md-autocomplete
+          md-search-text="filter.urlPattern"
+          md-items="[]"
+          ng-if="filter.type == 'urls'"
+          md-floating-label="*://*.google.com/*"
+          placeholder="*://*.google.com/*"
+          class="comment-autocomplete"
+          flex>
+        </md-autocomplete>
+        <md-button class="md-icon-button" aria-label="Help" md-no-ink
+          ng-if="filter.type == 'urls'"
+          ng-click="openLink('https://developer.chrome.com/extensions/match_patterns')">
+          <md-icon md-svg-src="images/ic_help_24px.svg"></md-icon>
+        </md-button>
+        <md-select ng-model="filter.resourceType" placeholder="Resource Type" flex
+          ng-if="filter.type == 'types'" multiple="true">
+          <md-option value="main_frame">Main Frame</md-option>
+          <md-option value="sub_frame">Sub Frame</md-option>
+          <md-option value="stylesheet">Stylesheet</md-option>
+          <md-option value="script">Script</md-option>
+          <md-option value="image">Image</md-option>
+          <md-option value="object">Object</md-option>
+          <md-option value="xmlhttprequest">XmlHttpRequest</md-option>
+          <md-option value="other">Other</md-option>
+        </md-select>
+        <md-button class="md-icon-button" md-no-ink
+          ng-click="dataSource.removeFilter(dataSource.selectedProfile.filters, filter)">
+          <md-icon md-svg-icon="md-close"
+            class="remove-button-icon"></md-icon>
+        </md-button>
+      </div>
+    </div>
+  </md-content>
+</body>

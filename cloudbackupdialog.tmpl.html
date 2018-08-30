@@ -1,0 +1,23 @@
+<md-dialog flex="70">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Cloud backup</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div layout="row" flex
+        ng-repeat="data in savedData | orderBy:'-timeInMs'">
+      <md-button ng-click="selectProfiles(data.profiles)" class="md-primary">
+        Backup at {{data.timeInMs | date:'short'}} -
+        <span ng-repeat="profile in data.profiles">
+          {{profile.title}}{{$last ? '' : ','}}
+        </span>
+      </md-button>
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="closeDialog()" class="md-primary">
+      Cancel
+    </md-button>
+  </div>
+</md-dialog>

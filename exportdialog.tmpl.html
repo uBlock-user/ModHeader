@@ -1,0 +1,20 @@
+<md-dialog flex="70">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>{{title}}</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <md-input-container flex>
+      <textarea rows="5" id="exportedProfile" readonly ng-click="copy()">{{profile}}</textarea>
+    </md-input-container>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="copy()" class="md-primary">
+      Copy
+    </md-button>
+    <md-button ng-click="closeDialog()" class="md-primary">
+      Done
+    </md-button>
+  </div>
+</md-dialog>

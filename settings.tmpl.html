@@ -1,0 +1,30 @@
+<md-dialog flex="70">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Profile settings</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div>
+      On same header name:
+      <md-select ng-model="profile.appendMode" flex>
+        <md-option value="">Override existing value</md-option>
+        <md-option value="true">Value concatenation</md-option>
+        <md-option value="comma">Comma separated concatenation</md-option>
+      </md-select>
+    </div>
+
+    <div>
+    Comment column:
+      <md-select ng-model="profile.hideComment" flex>
+        <md-option value="">Show</md-option>
+        <md-option value="true">Hide</md-option>
+      </md-select>
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="closeDialog()" class="md-primary">
+      Done
+    </md-button>
+  </div>
+</md-dialog>
